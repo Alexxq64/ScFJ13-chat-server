@@ -38,6 +38,7 @@ public class ChatServer {
 
                 // создаем клиента на своей стороне
                 clients.add(new Client(socket, this));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

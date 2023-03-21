@@ -20,7 +20,7 @@ class Client implements Runnable {
     }
 
     void receive(String message) {
-        out.println(">> " +message);
+        out.println(">> " + message);
     }
 
 
@@ -38,13 +38,43 @@ class Client implements Runnable {
             out.println("Welcome to chat!");
             out.println("What's your name?");
             name = in.nextLine();
+            cs.clients.set(cs.clients.size() - 1, this).name = name;
             out.println("Hi, " + name);
-            String input = in.nextLine();
-            while (!input.equals("bye")) {
-                cs.sendAll(input);
-                input = in.nextLine();
+            String input;
+//                out.println("(0) exit  (1) send a message to all  (2) send message to");
+            int choise;
+            while (true) {
+                out.println("(0) exit  (1) send a message to all  (2) send message to");
+                choise = in.nextInt();
+                in.nextLine(); // !!!!!!!!!!!!!
+                switch (choise) {
+                    case 0:
+                        socket.close();
+                        break;
+                    case 1:
+                        out.println("enter message: ");
+                        input = in.nextLine();
+                        cs.sendAll(input);
+                        break;
+                    case 2:
+                        out.println("There are in the chat: ");
+                        for (Client c: cs.clients){
+                            out.print(c.name + "  ");
+                        }
+                        out.println();
+                        out.println("enter number: ");
+                        int receiver;
+                        receiver = in.nextInt();
+                        in.nextLine();
+                        if (receiver >=0 && receiver <= cs.clients.size()) {
+                            out.println("enter message: ");
+                            input = in.nextLine();
+                            cs.clients.get(receiver).out.println("to " + cs.clients.get(receiver).name + " from " + this.name + ">>" + input);
+                            out.println("to " + cs.clients.get(receiver).name + " from " + this.name + ">>" + input);
+                        }
+                }
+                choise = in.nextInt();
             }
-            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
